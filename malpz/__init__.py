@@ -44,7 +44,7 @@ class MetadataException(Exception):
 
     def __init__(self, msg):
         """Create a new exception containing msg."""
-        super(MetadataException, self).__init__(self, msg)
+        super().__init__(msg)
         self.msg = msg
 
     def __str__(self):
