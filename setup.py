@@ -25,6 +25,5 @@ setup(
         ]
     },
     keywords='malware, malpz, neuter',
-    classifiers=[],
     platforms=['any'],
 )
