@@ -7,7 +7,6 @@ from setuptools import find_packages, setup
 install_requires = [r.strip() for r in open('requirements.txt', 'r') if not r.startswith('#')]
 
 setup(
-    python_requires='>=3.10',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     packages=find_packages('.', exclude=['test', 'tests']),
@@ -19,6 +18,21 @@ setup(
     description='The MALPZ (Malware Pickled Zip) format describes a method '
     'of neutering malware while providing a simple, extensible '
     'mechanism for capturing metadata',
+    python_requires=">=3.9",
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries',
+    ],
     entry_points={
         'console_scripts': [
             'malpz = malpz:_entry',
