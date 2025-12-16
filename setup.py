@@ -4,6 +4,9 @@ from __future__ import print_function
 
 from setuptools import find_packages, setup
 
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 install_requires = [r.strip() for r in open('requirements.txt', 'r') if not r.startswith('#')]
 
 setup(
@@ -19,6 +22,8 @@ setup(
     'of neutering malware while providing a simple, extensible '
     'mechanism for capturing metadata',
     python_requires=">=3.9",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
