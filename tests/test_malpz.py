@@ -8,11 +8,11 @@ import unittest
 
 import malpz
 
-test_data = b'bob'
+test_data = b"bob"
 test_md5 = hashlib.md5(test_data).hexdigest()
 test_sha1 = hashlib.sha1(test_data).hexdigest()
-test_classification = 'UNCLASSIFIED'
-test_unprintable = u'\xd3\xca\xbc\xfe\xb5\xc7\xbc\xc7\xb1\xed.xls'
+test_classification = "UNCLASSIFIED"
+test_unprintable = "\xd3\xca\xbc\xfe\xb5\xc7\xbc\xc7\xb1\xed.xls"
 test_unprintable_meta = dict(features=dict(filename=test_unprintable))
 
 test_maldict = dict(
@@ -44,7 +44,7 @@ class TestValidateVersion(unittest.TestCase):
 
         header = b"\xf0\xf0.malpz_v%s\x00\x0f\x0f" % malpz.VERSION
         # corrupt the magic
-        header = header.replace(b'm', b'M')
+        header = header.replace(b"m", b"M")
         data = header + b"_more_data_" * 8
 
         self.assertRaises(malpz.MetadataException, malpz.validate_version, data)
@@ -81,10 +81,10 @@ class TestWrap(unittest.TestCase):
         wrapped = malpz.wrap(test_data, test_classification, meta=dict(features=dict(sha1=test_sha1)))
         unwrapped = malpz.unwrap(wrapped)
 
-        self.assertEqual(unwrapped['version'], malpz.VERSION)
-        self.assertEqual(unwrapped['data'], test_data)
-        self.assertEqual(unwrapped['classification'], test_classification)
-        self.assertEqual(unwrapped['meta']['features']['sha1'], test_sha1)
+        self.assertEqual(unwrapped["version"], malpz.VERSION)
+        self.assertEqual(unwrapped["data"], test_data)
+        self.assertEqual(unwrapped["classification"], test_classification)
+        self.assertEqual(unwrapped["meta"]["features"]["sha1"], test_sha1)
 
     def test_unprintable_chars(self):
         """malpz.wrap - test wrap & unwrap with non-printable char, opt meta"""
@@ -92,10 +92,10 @@ class TestWrap(unittest.TestCase):
         wrapped = malpz.wrap(test_data, test_classification, meta=test_unprintable_meta)
         unwrapped = malpz.unwrap(wrapped)
 
-        self.assertEqual(unwrapped['version'], malpz.VERSION)
-        self.assertEqual(unwrapped['data'], test_data)
-        self.assertEqual(unwrapped['classification'], test_classification)
-        self.assertEqual(unwrapped['meta']['features']['filename'], test_unprintable)
+        self.assertEqual(unwrapped["version"], malpz.VERSION)
+        self.assertEqual(unwrapped["data"], test_data)
+        self.assertEqual(unwrapped["classification"], test_classification)
+        self.assertEqual(unwrapped["meta"]["features"]["filename"], test_unprintable)
 
 
 class TestWrapToFile(unittest.TestCase):
@@ -117,16 +117,16 @@ class TestWrapToFile(unittest.TestCase):
 
         self.assertTrue(os.path.exists(self.temp_filename))
         filesize = os.path.getsize(self.temp_filename)
-        msg = 'file size is %d for %s, must be at least %d' % (filesize, self.temp_filename, len(malpz.MALPZ_HEADER))
+        msg = "file size is %d for %s, must be at least %d" % (filesize, self.temp_filename, len(malpz.MALPZ_HEADER))
         self.assertTrue(filesize > len(malpz.MALPZ_HEADER), msg)
 
         self.assertTrue(malpz.supported_file(self.temp_filename))
 
         unwrapped = malpz.unwrap_from_file(self.temp_filename)
 
-        self.assertEqual(unwrapped['version'], malpz.VERSION)
-        self.assertEqual(unwrapped['data'], test_data)
-        self.assertEqual(unwrapped['classification'], test_classification)
+        self.assertEqual(unwrapped["version"], malpz.VERSION)
+        self.assertEqual(unwrapped["data"], test_data)
+        self.assertEqual(unwrapped["classification"], test_classification)
 
 
 class TestMain(unittest.TestCase):

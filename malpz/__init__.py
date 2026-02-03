@@ -56,8 +56,8 @@ def wrap(data, classification, meta=None):
     """Turn passed parameters into JSON object, zip it then return buffer."""
     # Create the output dict.
     maldict = dict(
-        data=binascii.hexlify(data).decode('ascii'),  # hexlify produces bytes as output
-        md5sum=hashlib.md5(data).hexdigest(),  # noqa: S303 # nosec
+        data=binascii.hexlify(data).decode("ascii"),  # hexlify produces bytes as output
+        md5sum=hashlib.md5(data).hexdigest(),  # noqa: S324
         classification=classification,
     )
     if meta is not None:
@@ -65,8 +65,8 @@ def wrap(data, classification, meta=None):
 
     # Compress our resultant JSON.
     # (Note that we rely on the default param ensure_ascii=True to guarantee an ascii-encodable output.)
-    buf = zlib.compress(json.dumps(maldict).encode('ascii'))
-    return b'%s%s' % (MALPZ_HEADER, buf)
+    buf = zlib.compress(json.dumps(maldict).encode("ascii"))
+    return b"%s%s" % (MALPZ_HEADER, buf)
 
 
 def validate_version(buf):
@@ -76,7 +76,7 @@ def validate_version(buf):
     if MALPZ_MAGIC.search(header) is None:
         raise MetadataException("Incorrect malpz magic")
 
-    version = VERSION_SEARCH.search(header).groupdict()['version']
+    version = VERSION_SEARCH.search(header).groupdict()["version"]
 
     if version != VERSION:
         msg = "version '%s' not supported - currently supporting %s" % (version, VERSION)
@@ -93,9 +93,9 @@ def unwrap(buf):
     buf = buf[len(MALPZ_HEADER) :]
 
     # extract the dictionary
-    maldict = json.loads(zlib.decompress(buf).decode('ascii'))
+    maldict = json.loads(zlib.decompress(buf).decode("ascii"))
     maldict["data"] = binascii.unhexlify(maldict["data"])
-    maldict['version'] = version
+    maldict["version"] = version
 
     # return the resultant dictionary
     return maldict
@@ -110,7 +110,7 @@ def wrap_to_file(filepath, data, classification, **kwargs):
         classification - classification of this data
         **optional metadata keyword arguments
     """
-    with open(filepath, 'wb') as handle:
+    with open(filepath, "wb") as handle:
         handle.write(wrap(data, classification, **kwargs))
 
 
@@ -123,7 +123,7 @@ def unwrap_from_file(filepath):
 
 def supported_file(filepath):
     """Check if the filepath is supported."""
-    with open(filepath, 'rb') as handle:
+    with open(filepath, "rb") as handle:
         header = handle.read(len(MALPZ_HEADER))
 
     try:
@@ -193,15 +193,15 @@ def main(argv):
     """Run malpz as a command-line util."""
     # Parse the command line args.
     try:
-        opts, args = getopt.getopt(argv, "hc:l", ["help", "classif=", 'list', 'include_filename', 'use_filename'])
+        opts, args = getopt.getopt(argv, "hc:l", ["help", "classif=", "list", "include_filename", "use_filename"])
     except Exception as exc:
         print("Args error %s\n" % exc, file=sys.stderr)
         print(__help__, file=sys.stderr)
         return 1
 
     # Print help if needed.
-    params = dict([(k.strip('-'), a) for k, a in opts])
-    if 'h' in params or 'help' in params:
+    params = dict([(k.strip("-"), a) for k, a in opts])
+    if "h" in params or "help" in params:
         print(__help__)
         return 0
 
@@ -222,20 +222,20 @@ def main(argv):
         maldict = unwrap_from_file(in_path)
 
         # Print info if asked.
-        if 'l' in params or 'list' in params:
+        if "l" in params or "list" in params:
             # Try to get filename from meta.
-            fname = maldict.get('meta', {}).get('features', {}).get('filename', [])
+            fname = maldict.get("meta", {}).get("features", {}).get("filename", [])
             if fname:
-                print('Filename:\t%s' % os.path.basename(fname[0]))
+                print("Filename:\t%s" % os.path.basename(fname[0]))
 
-            print('MD5:\t\t%s' % maldict['md5sum'])
-            print('Classification:\t%s' % maldict['classification'])
-            print('Malpz Version:\t%s' % maldict['version'])
+            print("MD5:\t\t%s" % maldict["md5sum"])
+            print("Classification:\t%s" % maldict["classification"])
+            print("Malpz Version:\t%s" % maldict["version"])
 
-            if 'meta' in maldict:
-                print('Meta:\t\tpresent')
+            if "meta" in maldict:
+                print("Meta:\t\tpresent")
             else:
-                print('Meta:\t\tabsent')
+                print("Meta:\t\tabsent")
             return 0
 
         # Didn't want info, so lets extract it.
@@ -244,8 +244,8 @@ def main(argv):
             out_path = in_path[: 0 - len(".malpz")]
         else:
             out_path = None
-            if 'use_filename' in params:
-                out_path = maldict.get('meta', {}).get('features', {}).get('filename', [None])[0]
+            if "use_filename" in params:
+                out_path = maldict.get("meta", {}).get("features", {}).get("filename", [None])[0]
             if out_path is None:
                 out_path = in_path + ".unmalpzed"
 
@@ -276,7 +276,7 @@ def main(argv):
         in_path_basename = os.path.basename(in_path)
         meta = None
         if "include_filename" in params:
-            meta = {'features': {'filename': [in_path_basename]}}
+            meta = {"features": {"filename": [in_path_basename]}}
         with open(in_path, "rb") as in_file:
             wrap_to_file(out_path, in_file.read(), classif, meta=meta)
         print("File malpzed to %s" % out_path)
