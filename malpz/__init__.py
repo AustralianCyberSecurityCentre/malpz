@@ -57,7 +57,7 @@ def wrap(data, classification, meta=None):
     # Create the output dict.
     maldict = dict(
         data=binascii.hexlify(data).decode("ascii"),  # hexlify produces bytes as output
-        md5sum=hashlib.md5(data).hexdigest(),  # noqa: S303 # nosec
+        md5sum=hashlib.md5(data).hexdigest(),  # noqa: S324
         classification=classification,
     )
     if meta is not None:
