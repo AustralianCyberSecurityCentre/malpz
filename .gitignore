@@ -225,5 +225,4 @@ tags
 # End of https://www.gitignore.io/api/vim,python,pycharm
 
 .ruff_cache
-# FUTURE UV IS USEFUL
-uv.lock
+
