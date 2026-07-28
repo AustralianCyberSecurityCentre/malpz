@@ -76,7 +76,10 @@ def validate_version(buf):
     if MALPZ_MAGIC.search(header) is None:
         raise MetadataException("Incorrect malpz magic")
 
-    version = VERSION_SEARCH.search(header).groupdict()["version"]
+    version = VERSION_SEARCH.search(header)
+    if version is None:
+        raise MetadataException("Could not find version in header")
+    version = version.groupdict()["version"]
 
     if version != VERSION:
         msg = "version '%s' not supported - currently supporting %s" % (version, VERSION)
